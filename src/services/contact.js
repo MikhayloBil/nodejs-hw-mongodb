@@ -4,7 +4,11 @@ export const getAllContacts = () => ContactCollection.find();
 
 export const getContactById = (id) => ContactCollection.findById(id);
 
-export const createContact = (payload) => ContactCollection.create(payload);
+export const createContact = async (payload) => {
+  const contact = await ContactCollection.create(payload);
+
+  return contact;
+};
 
 export const updateContact = async (filter, data, options = {}) => {
   const rawResult = await ContactCollection.findOneAndUpdate(filter, data, {

@@ -18,7 +18,6 @@ export const getAllContactsByIdControler = async (req, res) => {
   if (!data) {
     throw createHttpError(404, 'Contact not found');
   }
-
   res.json({
     status: 200,
     message: `Successfully found contact with id=${id}!`,

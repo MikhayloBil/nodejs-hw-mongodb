@@ -23,10 +23,8 @@ const contactSchema = new Schema(
     },
   },
   {
-    versionKey: false,
-  },
-  {
     timestamps: { createdAt: true, updatedAt: false },
+    versionKey: false,
   },
 );
 

@@ -22,10 +22,7 @@ const contactSchema = new Schema(
       required: true,
     },
   },
-  {
-    timestamps: { createdAt: true, updatedAt: false },
-    versionKey: false,
-  },
+  { versionKey: false, timestamps: true },
 );
 
 const ContactCollection = model('contact', contactSchema);

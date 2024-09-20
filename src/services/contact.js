@@ -7,16 +7,18 @@ export const getAllContacts = async ({
   page,
   sortBy = '_id',
   sortOrder = SORT_ORDER[0],
+  userId,
 }) => {
   const skip = (page - 1) * perPage;
-  const contactQuery = ContactCollection.find();
+  const contactQuery = ContactCollection.find({ userId });
+
   const contacts = await contactQuery
     .skip(skip)
     .limit(perPage)
     .sort({ [sortBy]: sortOrder });
-  const count = await ContactCollection.find()
-    .merge(contactQuery)
-    .countDocuments();
+
+  const count = await ContactCollection.find({ userId }).countDocuments();
+
   const paginationData = calculatePaginationData({ count, perPage, page });
   return {
     page,
@@ -27,7 +29,8 @@ export const getAllContacts = async ({
   };
 };
 
-export const getContactById = (id) => ContactCollection.findById(id);
+export const getContactById = ({ _id: id, userId }) =>
+  ContactCollection.findOne({ _id: id, userId });
 
 export const createContact = async (payload) => {
   const contact = await ContactCollection.create(payload);

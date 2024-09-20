@@ -10,7 +10,9 @@ export const getAllContacts = async ({
   userId,
 }) => {
   const skip = (page - 1) * perPage;
+
   const contactQuery = ContactCollection.find({ userId });
+
 
   const data = await contactQuery
     .skip(skip)
@@ -21,9 +23,12 @@ export const getAllContacts = async ({
 
   const paginationData = calculatePaginationData({ count, perPage, page });
   return {
+    data,
     page,
     perPage,
+
     data,
+
     totalItems: count,
     ...paginationData,
   };

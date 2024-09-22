@@ -84,10 +84,12 @@ export const refreshSession = async ({ refreshToken, sessionId }) => {
   });
 
   if (!oldSession) {
+    console.error('Session not found or refreshToken mismatch');
     throw createHttpError(401, 'Session not found');
   }
 
   if (new Date() > oldSession.refreshTokenValidUntil) {
+    console.error('Refresh token expired');
     throw createHttpError(401, 'Session token expired');
   }
 
@@ -96,7 +98,7 @@ export const refreshSession = async ({ refreshToken, sessionId }) => {
   const accessTokenValidUntil = new Date(Date.now() + accessTokenLifetime);
   const refreshTokenValidUntil = new Date(Date.now() + refreshTokenLifetime);
 
-  await SessionCollection.updateOne(
+  const sessionUpdate = await SessionCollection.updateOne(
     { _id: sessionId },
     {
       accessToken: newAccessToken,
@@ -105,11 +107,25 @@ export const refreshSession = async ({ refreshToken, sessionId }) => {
       refreshTokenValidUntil,
     },
   );
+  console.log('Session updated in DB:', sessionUpdate);
 
-  return { accessToken: newAccessToken, refreshToken: newRefreshToken };
+  return {
+    ...oldSession.toObject(),
+    accessToken: newAccessToken,
+    refreshToken: newRefreshToken,
+    accessTokenValidUntil,
+    refreshTokenValidUntil,
+  };
 };
 
 export const logout = async (sessionId) => {
+  const session = await SessionCollection.findOne({ _id: sessionId });
+
+  if (!session) {
+    console.error('Session not found during logout');
+    throw createHttpError(404, 'Session not found');
+  }
+
   await SessionCollection.deleteOne({ _id: sessionId });
 };
 

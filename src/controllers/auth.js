@@ -1,14 +1,24 @@
 import * as authServices from '../services/auth.js';
 
 const setupSession = (res, session) => {
+  if (!session.refreshToken || !session._id) {
+    console.error('Failed to set cookies: Missing session tokens');
+    return;
+  }
+
   res.cookie('refreshToken', session.refreshToken, {
     httpOnly: true,
-    expire: new Date(Date.now() + session.refreshTokenValidUntil),
+    path: '/',
   });
 
   res.cookie('sessionId', session._id, {
     httpOnly: true,
-    expire: new Date(Date.now() + session.refreshTokenValidUntil),
+    path: '/',
+  });
+
+  console.log('Cookies set successfully:', {
+    refreshToken: session.refreshToken,
+    sessionId: session._id,
   });
 };
 

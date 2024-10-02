@@ -5,6 +5,7 @@ import authenticate from '../middlewares/authenticate.js';
 import isValidId from '../middlewares/isValidId.js';
 import ctrlWrapper from '../utils/ctrlWrapper.js';
 import validateBody from '../utils/validateBody.js';
+import { upload } from '../middlewares/upload.js';
 
 import {
   contactAddSchema,
@@ -27,12 +28,14 @@ contactsRouter.get(
 
 contactsRouter.post(
   '/',
+  upload.single('photo'),
   validateBody(contactAddSchema),
   ctrlWrapper(contactControllers.addContactsControler),
 );
 
 contactsRouter.patch(
   '/:id',
+  upload.single('photo'),
   isValidId,
   validateBody(contactPatchSchema),
   ctrlWrapper(contactControllers.patchContactController),

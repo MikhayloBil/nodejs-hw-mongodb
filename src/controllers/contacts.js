@@ -5,7 +5,6 @@ import parseSortParams from '../utils/parseSortParams.js';
 import { sortFields } from '../db/models/Contact.js';
 import { saveFileToUploadDir } from '../utils/saveFileToUploadDir.js';
 import saveFileToCloudinary from '../utils/saveFileToCloudinary.js';
-import { env } from '../utils/env.js';
 
 export const getAllContactsController = async (req, res) => {
   const { _id: userId } = req.user;
@@ -42,13 +41,12 @@ export const getAllContactsByIdControler = async (req, res) => {
 };
 
 export const addContactsControler = async (req, res) => {
-  const photo = req.file;
-  let photoUrl;
-  if (photo) {
+  let photo;
+  if (req.file) {
     if (process.env.ENABLE_CLOUDINARY === 'true') {
-      photoUrl = await saveFileToCloudinary(req.file, 'photo');
+      photo = await saveFileToCloudinary(req.file, 'photo');
     } else {
-      photoUrl = await saveFileToUploadDir(req.file);
+      photo = await saveFileToUploadDir(req.file);
     }
   }
 
@@ -61,6 +59,7 @@ export const addContactsControler = async (req, res) => {
       'Missing required fields: name, phoneNumber, or contactType',
     );
   }
+
   const data = await contactServices.createContact({
     name,
     phoneNumber,
@@ -68,7 +67,7 @@ export const addContactsControler = async (req, res) => {
     isFavourite: isFavourite || false,
     contactType,
     userId,
-    photoUrl,
+    photo,
   });
 
   res.status(201).json({
@@ -80,19 +79,17 @@ export const addContactsControler = async (req, res) => {
 
 export const patchContactController = async (req, res) => {
   const { id } = req.params;
-  const { _id: userId } = req.user;
-  const photo = req.file;
-  let photoUrl;
-  if (photo) {
+  let photo;
+  if (req.file) {
     if (process.env.ENABLE_CLOUDINARY === 'true') {
-      photoUrl = await saveFileToCloudinary(req.file, 'photo');
+      photo = await saveFileToCloudinary(req.file, 'photo');
     } else {
-      photoUrl = await saveFileToUploadDir(req.file);
+      photo = await saveFileToUploadDir(req.file);
     }
   }
   const result = await contactServices.updateContact(
-    { _id: id, userId, photo: photoUrl },
-    req.body,
+    { _id: id, userId: req.user._id },
+    { ...req.body, photo },
   );
 
   if (!result) {

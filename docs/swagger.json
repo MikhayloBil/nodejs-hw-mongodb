@@ -60,15 +60,6 @@
           },
           {
             "in": "query",
-            "name": "sortBy",
-            "schema": {
-              "type": "string",
-              "example": "age"
-            },
-            "description": "All contacts fields can be mentioned. Default value - _id"
-          },
-          {
-            "in": "query",
             "name": "sortOrder",
             "schema": {
               "type": "string",
@@ -214,8 +205,8 @@
                     "type": "string",
                     "format": "binary"
                   },
-                  "parentId": {
-                    "description": "Contacts parent id",
+                  "userId": {
+                    "description": "Contacts user id",
                     "type": "string",
                     "example": "65e4decdd286b30065d54af9"
                   }

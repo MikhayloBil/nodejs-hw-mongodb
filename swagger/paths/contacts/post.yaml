@@ -41,8 +41,8 @@ requestBody:
             description: 'Contacts photo'
             type: string
             format: binary
-          parentId:
-            description: 'Contacts parent id'
+          userId:
+            description: 'Contacts user id'
             type: string
             example: 65e4decdd286b30065d54af9
 responses:

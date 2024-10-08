@@ -41,10 +41,6 @@ requestBody:
             description: 'Contacts photo'
             type: string
             format: binary
-          userId:
-            description: 'Contacts user id'
-            type: string
-            example: 65e4decdd286b30065d54af9
 responses:
   '201':
     description: Creates a contacts

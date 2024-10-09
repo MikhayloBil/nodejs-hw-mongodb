@@ -60,6 +60,15 @@
           },
           {
             "in": "query",
+            "name": "sortBy",
+            "schema": {
+              "type": "string",
+              "example": "isFavourite"
+            },
+            "description": "All Contacts fields can be mentioned. Default value - _id"
+          },
+          {
+            "in": "query",
             "name": "sortOrder",
             "schema": {
               "type": "string",
@@ -68,6 +77,27 @@
                 "desc"
               ],
               "example": "asc"
+            }
+          },
+          {
+            "in": "query",
+            "name": "isFavourite",
+            "schema": {
+              "type": "boolean",
+              "example": false
+            }
+          },
+          {
+            "in": "query",
+            "name": "type",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "home",
+                "personal",
+                "work"
+              ],
+              "example": "home"
             }
           }
         ],
